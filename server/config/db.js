@@ -1,0 +1,15 @@
+import mongoose from 'mongoose';
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/crimenova'
+    );
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error(`❌ MongoDB Error: ${error.message}`);
+    console.log('⚠️  Server running without database. Frontend will use sample data.');
+  }
+};
+
+export default connectDB;
