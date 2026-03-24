@@ -18,14 +18,16 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = (userData) => {
+  const login = (userData, token) => {
     setUser(userData);
     localStorage.setItem('crimenova_user', JSON.stringify(userData));
+    if (token) localStorage.setItem('crimenova_token', token);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('crimenova_user');
+    localStorage.removeItem('crimenova_token');
   };
 
   return (

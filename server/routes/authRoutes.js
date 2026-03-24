@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
 
@@ -33,8 +34,15 @@ router.post('/google', async (req, res) => {
       await user.save();
     }
 
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || 'fallback_secret',
+      { expiresIn: '7d' }
+    );
+
     res.status(200).json({
       message: 'Login successful',
+      token,
       user: {
         id: user._id,
         name: user.name,

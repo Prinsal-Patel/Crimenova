@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "Crimenova - Crime Analysis & Prediction Platform",
   "scripts": {
+    "start": "cd server && npm start",
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
     "server": "cd server && node server.js",
     "client": "cd client && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",

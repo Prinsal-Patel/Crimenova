@@ -25,12 +25,13 @@ export async function loginWithGoogle(profile) {
     // Return a mocked success response in case DB is offline (fallback behavior)
     return {
       message: 'Login successful (fallback mode)',
+      token: 'mock_token',
       user: {
         id: profile.sub,
         name: profile.name,
         email: profile.email,
         picture: profile.picture,
-        role: 'User'
+        role: 'Citizen'
       }
     };
   }

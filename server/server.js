@@ -27,6 +27,15 @@ app.get('/api', (req, res) => {
   res.json({ message: 'Crimenova API is running', version: '1.0.0' });
 });
 
+if (process.env.NODE_ENV === 'production') {
+  const clientDistPath = join(__dirname, '..', 'client', 'dist');
+  app.use(express.static(clientDistPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(join(clientDistPath, 'index.html'));
+  });
+}
+
 app.listen(PORT, () => {
   console.log(`\n🚀 Crimenova Server running on http://localhost:${PORT}`);
   console.log(`📡 API endpoint: http://localhost:${PORT}/api\n`);

@@ -3,8 +3,15 @@ import { calculateStats, predictCrime } from '../utils/predictionUtils';
 
 const API_BASE = '/api';
 
-async function apiFetch(endpoint) {
-  const res = await fetch(`${API_BASE}${endpoint}`);
+async function apiFetch(endpoint, options = {}) {
+  const token = localStorage.getItem('crimenova_token');
+  const headers = { ...options.headers };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers
+  });
   if (!res.ok) throw new Error(`API ${res.status}`);
   return res.json();
 }
@@ -45,9 +52,13 @@ export async function fetchPrediction(params = {}) {
 
 export async function sendEmergency(data) {
   try {
+    const token = localStorage.getItem('crimenova_token');
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     const res = await fetch(`${API_BASE}/emergency`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(data)
     });
     if (!res.ok) throw new Error('Failed');

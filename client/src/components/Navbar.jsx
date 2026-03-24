@@ -24,7 +24,7 @@ export default function Navbar() {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
       const data = await loginWithGoogle(decoded);
-      login(data.user);
+      login(data.user, data.token);
     } catch (err) {
       console.error("Login failed:", err);
     }
@@ -40,17 +40,22 @@ export default function Navbar() {
         {open ? <X size={24} color="#94a3b8" /> : <Menu size={24} color="#94a3b8" />}
       </button>
       <div className={`navbar-links ${open ? 'open' : ''}`}>
-        {links.map(link => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={`nav-link ${pathname === link.to ? 'active' : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            <link.icon size={18} />
-            <span>{link.label}</span>
-          </Link>
-        ))}
+        {links.map(link => {
+          if (link.to === '/dashboard' && (!user || (user.role !== 'Police' && user.role !== 'Admin'))) {
+            return null; // Hide dashboard for non-Police/Admin
+          }
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`nav-link ${pathname === link.to ? 'active' : ''}`}
+              onClick={() => setOpen(false)}
+            >
+              <link.icon size={18} />
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
 
         {user ? (
           <div className="nav-profile-container" style={{ position: 'relative', marginLeft: '1rem' }}>
