@@ -1,7 +1,7 @@
 import express from 'express';
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
-
+import { protect, authorize } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // POST /api/auth/google
@@ -55,6 +55,18 @@ router.post('/google', async (req, res) => {
   } catch (error) {
     console.error('Google Auth Error:', error);
     res.status(500).json({ message: 'Server error during authentication' });
+  }
+});
+
+// GET /api/auth/users
+// Get all users, accessible only by Admin or Police
+router.get('/users', protect, authorize('Admin', 'Police'), async (req, res) => {
+  try {
+    const users = await User.find({}).sort({ lastLogin: -1 });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Fetch Users Error:', error);
+    res.status(500).json({ message: 'Server error fetching users' });
   }
 });
 

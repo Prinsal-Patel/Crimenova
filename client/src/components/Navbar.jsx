@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Map, BarChart3, Brain, Phone, Menu, X, LogOut, User } from 'lucide-react';
+import { Shield, Map, BarChart3, Brain, Phone, Menu, X, LogOut, User, Users } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,7 @@ const links = [
   { to: '/dashboard', label: 'Dashboard', icon: BarChart3 },
   { to: '/prediction', label: 'Prediction', icon: Brain },
   { to: '/emergency', label: 'Emergency', icon: Phone },
+  { to: '/users', label: 'Users', icon: Users },
 ];
 
 export default function Navbar() {
@@ -41,8 +42,8 @@ export default function Navbar() {
       </button>
       <div className={`navbar-links ${open ? 'open' : ''}`}>
         {links.map(link => {
-          if (link.to === '/dashboard' && (!user || (user.role !== 'Police' && user.role !== 'Admin'))) {
-            return null; // Hide dashboard for non-Police/Admin
+          if ((link.to === '/dashboard' || link.to === '/users') && (!user || (user.role !== 'Police' && user.role !== 'Admin'))) {
+            return null; // Hide internal pages for non-Police/Admin
           }
           return (
             <Link
